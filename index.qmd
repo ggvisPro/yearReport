@@ -58,7 +58,7 @@ number-sections: true
 ---
 
 :::{.callout-note}
-## 报告概要
+# 报告概要
 本报告总结了2024年度的主要工作成果、面临的挑战以及未来发展规划。
 :::
 
@@ -185,6 +185,8 @@ c.render(output_file)
 from IPython.display import IFrame
 IFrame(src=output_file, width=800, height=600)
 ```
+
+## 年度工作成果概览
 
 :::{.panel-tabset}
 ### 产学合作项目推进
