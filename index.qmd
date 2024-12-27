@@ -22,7 +22,36 @@ format:
           text-align: center;
           color: #34495e;
         }
+        /* 禁用文本选择 */
+        * {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+        /* 保持代码块可选择 */
+        pre, code {
+          -webkit-user-select: text;
+          -moz-user-select: text;
+          -ms-user-select: text;
+          user-select: text;
+        }
         </style>
+        <script>
+        document.addEventListener('contextmenu', function(e) {
+          e.preventDefault(); // 禁用右键菜单
+        });
+        document.addEventListener('keydown', function(e) {
+          // 禁用复制快捷键
+          if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+            e.preventDefault();
+          }
+          // 禁用打印快捷键
+          if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+            e.preventDefault();
+          }
+        });
+        </script>
 date: 2024-12
 date-format: YYYY年MM月
 number-sections: true
@@ -40,11 +69,11 @@ number-sections: true
 #| fig-cap: "2024年工作内容词云分析"
 #| code-fold: true
 #| code-summary: "查看词云生成代码"
+#| code-copy: false
 import jieba
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from collections import Counter
-import os
 jieba.setLogLevel(20)  # 添加此行以禁用 jieba 日志
 
 # 读取markdown文件
@@ -93,6 +122,7 @@ plt.axis('off')
 #| fig-cap: "2024年出差分布图"
 #| code-fold: true
 #| code-summary: "查看地图生成代码"
+#| code-copy: false
 
 from pyecharts.charts import Map
 from pyecharts import options as opts
@@ -118,7 +148,7 @@ c = (
         bg_color="#FFFFFF"
     ))
     .add(
-        series_name="出差天数",
+        series_name="",
         data_pair=list(business_trips.items()),
         maptype="china",
         is_roam=True,
@@ -155,6 +185,7 @@ c.render(output_file)
 from IPython.display import IFrame
 IFrame(src=output_file, width=800, height=600)
 ```
+
 :::{.panel-tabset}
 ### 产学合作项目推进
 - 梳理2024年教育部产学合作协同育人项目申请流程
@@ -194,8 +225,7 @@ IFrame(src=output_file, width=800, height=600)
 ### 深化产学合作
 明确下一年度产学合作的目标，扩大合作范围，提升项目影响力。规划产学合作项目的长期发展，探索新的合作模式和机会。
 
-### 产品开发与创新
-针对现有产品进行功能升级和创新，提高产品的市场竞争力。
+### 产品开发与创新针对现有产品进行功能升级和创新，提高产品的市场竞争力。
 规划新产品的开发，特别是数字人和模拟人产品，以满足市场需求。
 
 ### 知识分享系列
