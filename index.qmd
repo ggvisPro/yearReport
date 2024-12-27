@@ -1,0 +1,226 @@
+---
+title: "年度述职报告"
+author: "王志坤"
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    toc-title: "目录"
+    code-fold: true
+    highlight-style: github
+    include-in-header:
+      text: |
+        <style>
+        .title {
+          color: #2c3e50;
+          text-align: center;
+          margin-bottom: 2em;
+        }
+        .author {
+          text-align: center;
+          color: #34495e;
+        }
+        </style>
+date: 2024-12
+date-format: YYYY年MM月
+number-sections: true
+---
+
+:::{.callout-note}
+## 报告概要
+本报告总结了2024年度的主要工作成果、面临的挑战以及未来发展规划。
+:::
+
+# 工作总结
+
+```{python}
+#| label: fig-wordcloud
+#| fig-cap: "2024年工作内容词云分析"
+#| code-fold: true
+#| code-summary: "查看词云生成代码"
+import jieba
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+from collections import Counter
+import os
+jieba.setLogLevel(20)  # 添加此行以禁用 jieba 日志
+
+# 读取markdown文件
+with open('大纲.md', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+# 使用jieba进行分词
+words = jieba.cut(text)
+
+# 过滤掉停用词和特殊字符
+stop_words = {'#', '###', '####','医学部', '的', '和', '与', '在', '了', '等', '对', '为', '以', '及', '中', '-', '#', '.',
+              '，', '。', '、', '（', '）', '：', '\n', ' ', '1', '2'}
+# Add filtering for sequence numbers (like 1.1, 2.3, etc.)
+words = [word for word in words if word not in stop_words and len(word) > 1 and not any(c.isdigit() for c in word)]
+
+# 统计词频
+word_freq = Counter(words)
+word_freq.update({'MISE': 20, '体格检查': 10, "妇科": 9, "SP劳务": 10, "宣武": 8, "虚拟仿真": 16, "临床思维": 12, "AI": 40, "大模型":40, "AI问诊": 20, "开会": 35})
+
+
+# 配置词云参数
+wc = WordCloud(
+    font_path='/System/Library/Fonts/PingFang.ttc',  # macOS系统中文字体路径
+    width=800,
+    height=400,
+    background_color='white',
+    max_words=100,
+    max_font_size=100,
+    random_state=42
+)
+
+# 生成词云
+wc.generate_from_frequencies(word_freq)
+
+# 显示词云
+plt.figure(figsize=(10, 5))
+plt.imshow(wc, interpolation='bilinear')
+plt.axis('off')
+
+```
+
+
+
+```{python}
+#| label: fig-business-trips
+#| fig-cap: "2024年出差分布图"
+#| code-fold: true
+#| code-summary: "查看地图生成代码"
+
+from pyecharts.charts import Map
+from pyecharts import options as opts
+from pyecharts.globals import ThemeType
+import os
+
+# 出差天数数据（确保城市名称完全匹配）
+business_trips = {
+    '上海市': 3,
+    '广东省': 8,
+    '浙江省': 2,
+    '湖南省': 3,
+    '河北省': 1,
+    '山东省': 3
+}
+
+# 创建地图
+c = (
+    Map(init_opts=opts.InitOpts(
+        theme=ThemeType.LIGHT,
+        width="800px",
+        height="600px",
+        bg_color="#FFFFFF"
+    ))
+    .add(
+        series_name="出差天数",
+        data_pair=list(business_trips.items()),
+        maptype="china",
+        is_roam=True,
+        label_opts=opts.LabelOpts(is_show=False),
+        is_map_symbol_show=False,
+    )
+    .set_global_opts(
+        title_opts=opts.TitleOpts(
+            title="2024年出差足迹",
+            pos_left="center",
+            padding=[10, 0, 0, 0]
+        ),
+        visualmap_opts=opts.VisualMapOpts(
+            min_=0,
+            max_=10,
+            is_piecewise=False,
+            range_text=["多", "少"],
+            is_calculable=True,
+            pos_left="10%",
+            range_color=["#EEF6FF", "#2B5CCE", "#1034A6"],
+        ),
+        tooltip_opts=opts.TooltipOpts(
+            trigger="item",
+            formatter="{b}: {c}天"
+        ),
+    )
+)
+
+# 保存为HTML文件
+output_file = "business_trips_map.html"
+c.render(output_file)
+
+# 显示HTML内容
+from IPython.display import IFrame
+IFrame(src=output_file, width=800, height=600)
+```
+:::{.panel-tabset}
+### 产学合作项目推进
+- 梳理2024年教育部产学合作协同育人项目申请流程
+- 完成项目申报流程的双向指导文档
+
+### 医学产品测试与开发
+- MISE儿科产品内测
+- 男性体格检查功能验证
+- 女性体格检查系统优化
+
+### 虚拟仿真项目
+- 男性体格检查数字人项目
+- 女性体格检查数字人项目
+- 宣武医院虚拟仿真项目
+
+### 其他重点工作
+- 医学部知识库搭建
+- MISE 案例导入
+- AI问诊项目支持
+- SP劳务发放管理（🤮🤮🤮）
+:::
+
+## 面临的挑战与改进措施
+### 项目协调与沟通
+面对跨部门协调的挑战，通过定期会议和沟通机制，确保项目顺利推进。
+针对产学合作项目中的问题，及时调整策略，优化流程，提高合作效率。
+
+### 产品测试与优化
+在产品内测中发现的问题，通过与研发团队紧密合作，快速响应并解决。
+对于男性体格检查、妇科、儿科等产品的测试，通过细致的案例分析和功能规划，提升产品实用性。
+
+# 未来规划
+
+:::{.columns}
+::: {.column width="48%"}
+## 工作目标与思路
+### 深化产学合作
+明确下一年度产学合作的目标，扩大合作范围，提升项目影响力。规划产学合作项目的长期发展，探索新的合作模式和机会。
+
+### 产品开发与创新
+针对现有产品进行功能升级和创新，提高产品的市场竞争力。
+规划新产品的开发，特别是数字人和模拟人产品，以满足市场需求。
+
+### 知识分享系列
+整理出对部门、对同事有用的tips。
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="48%"}
+## 重点任务与实施措施
+### 产学合作项目拓展
+制定详细的产学合作项目拓展计划，包括合作院校的选择和项目内容的设计。
+
+建立项目评估机制，确保合作项目的质量与效果。
+
+### 数字人与模拟人产品开发
+与研发团队合作，明确数字人与模拟人产品的功能需求和开发计划。
+
+定期组织产品测试和用户反馈收集，以指导产品优化和迭代。
+
+
+### 知识库与案例库建设
+完善医学部知识库的搭建，确保资料的系统化管理和更新。
+
+扩充体格检查案例库，为MISE系统提供更丰富的资源。
+:::
+:::
